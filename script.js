@@ -138,3 +138,36 @@ function testSpeech() {
 }
 
 testBtn.addEventListener('click', testSpeech);
+
+// Проговорить текст 
+
+var synth = window.speechSynthesis;
+var inputTxt = document.querySelector('p.phrase.text');
+
+function speak(){
+  if (synth.speaking) {
+      console.error('speechSynthesis.speaking');
+      return;
+  }
+  if (inputTxt.value !== '') {
+  var utterThis = new SpeechSynthesisUtterance(inputTxt.textContent);
+  utterThis.onend = function (event) {
+      console.log('SpeechSynthesisUtterance.onend');
+  }
+  utterThis.onerror = function (event) {
+      console.error('SpeechSynthesisUtterance.onerror');
+  }
+
+  utterThis.voice = synth.getVoices()[64] // TODO как-то находить надо
+  //utterThis.pitch = pitch.value;
+  //utterThis.rate = rate.value;
+  synth.speak(utterThis);
+}
+}
+
+inputTxt.onclick = function(event) {
+  //event.preventDefault();
+  speak();
+}
+
+
