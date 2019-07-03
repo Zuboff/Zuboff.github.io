@@ -25,7 +25,40 @@ var phrases = [
   'бежевый жакет', 
   'жулик жульничае', 
   'бумажный жук', 
-  'жасмин пожух'
+  'жасмин пожух',
+  'Белый ландыш', 
+  'белый голубь', 
+  'лавина скатилась', 
+  'Володя молод', 
+  'гладкая лавочка', 
+  'ловкая лайка',  
+  'футболка из лавсана', 
+  'холодный лоб', 
+  'ласковые ладошки', 
+  'половник  сломан', 
+  'Лайка лает', 
+  'милая улыбка',  
+  'белая ладья',  
+  'смелый малыш', 
+  'голубая лагуна', 
+  'годовалый малыш', 
+  'ловкий лазутчик', 
+  'теплый халат', 
+  'упал пенал', 
+  'Алла лакомка', 
+  'сел за стол', 
+  'долбил ёлку', 
+  'плот плывёт', 
+  'лампа Алладина', 
+  'плывёт по волнам', 
+  'плывут облака', 
+  'жёлтый лакмус',  
+  'пошёл ловить', 
+  'долгая лактация', 
+  'таял от тепла', 
+  'ловил лосося', 
+  'лапка белки', 
+  'лечила куклу',
 
 ];
 
@@ -40,14 +73,22 @@ function randomPhrase() {
   return number;
 }
 
+function nextWord() {
+  var phrase = phrases[randomPhrase()];
+  phrase = phrase.toLowerCase();
+  phrasePara.textContent = phrase;
+  return phrase
+}
+
 function testSpeech() {
   testBtn.disabled = true;
   testBtn.textContent = 'Идет тест';
 
-  var phrase = phrases[randomPhrase()];
+  //var phrase = phrases[randomPhrase()];
   // To ensure case consistency while checking with the returned output text
-  phrase = phrase.toLowerCase();
-  phrasePara.textContent = phrase;
+  //phrase = phrase.toLowerCase();
+  //phrasePara.textContent = phrase;
+  phrase = phrasePara.textContent;
   resultPara.textContent = 'Правильно или нет?';
   resultPara.style.background = 'rgba(0,0,0,0.2)';
   diagnosticPara.textContent = 'Здесь будет то, как Я услышал';
@@ -75,9 +116,11 @@ function testSpeech() {
     var speechResult = event.results[0][0].transcript.toLowerCase();
     diagnosticPara.textContent = 'Услышано: -> ' + speechResult + '.';
     if(speechResult === phrase) {
+      nextWord(); //?
       resultPara.textContent = 'Я услышал правильную фразу!';
       resultPara.style.background = 'lime';
     } else {
+      
       resultPara.textContent = 'Это звучит неправильно';
       resultPara.style.background = 'red';
     }
@@ -137,7 +180,10 @@ function testSpeech() {
   }
 }
 
+nextWord();
 testBtn.addEventListener('click', testSpeech);
+
+
 
 // Проговорить текст 
 
@@ -168,6 +214,10 @@ function speak(){
 inputTxt.onclick = function(event) {
   //event.preventDefault();
   speak();
+}
+
+resultPara.onclick = function(event) {
+  nextWord();
 }
 
 
