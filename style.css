@@ -53,3 +53,21 @@ button {
 .output {
   font-style: italic;
 }
+
+#container {
+  display: flex;
+}
+
+ol {
+  width: auto;
+}
+
+.difficulties {
+  width: 15%;
+  background-color: rgba(250, 132, 6, 0.879);
+}
+
+.correctly {
+  width: 15%;
+  background-color: rgba(177, 250, 6, 0.879);
+}

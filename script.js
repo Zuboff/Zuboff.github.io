@@ -13,9 +13,9 @@ var phrases = [
  'ежи на лужайке', 
  'жуткий пожар',
   'жадная жаба', 
-  'жёсткие жернова', 
+  'жeсткие жернова', 
   'желтый желток', 
-  'жёлтая желчь', 
+  'жeлтая желчь', 
   'одержимый джигит', 
   'прожжённый жакет', 
   'кожаный жакет', 
@@ -23,7 +23,7 @@ var phrases = [
   'нежная кожа', 
   'жулик выражается', 
   'бежевый жакет', 
-  'жулик жульничае', 
+  'жулик жульничает', 
   'бумажный жук', 
   'жасмин пожух',
   'Белый ландыш', 
@@ -52,7 +52,7 @@ var phrases = [
   'лампа Алладина', 
   'плывёт по волнам', 
   'плывут облака', 
-  'жёлтый лакмус',  
+  'жeлтый лакмус',  
   'пошёл ловить', 
   'долгая лактация', 
   'таял от тепла', 
@@ -65,29 +65,43 @@ var phrases = [
 var phrasePara = document.querySelector('.phrase');
 var resultPara = document.querySelector('.result');
 var diagnosticPara = document.querySelector('.output');
-
 var testBtn = document.querySelector('button');
+var stackWords = []
+var correctly = document.getElementById('correctly'); // отобразить правильно произносенные слова
+var difficulties = document.getElementById('difficulties'); // отобразить затруднения
 
-function randomPhrase() {
-  var number = Math.floor(Math.random() * phrases.length);
+//  Helper Function
+function randomPhrase(ar) {
+  var number = Math.floor(Math.random() * ar.length);
   return number;
 }
 
-function nextWord() {
-  var phrase = phrases[randomPhrase()];
+function arrayRemove(arr, value) {
+  return arr.filter(function(ele){
+      return ele != value;
+  });
+
+}
+
+function nextWord(ar) {
+  var phrase = ar[randomPhrase(ar)];
   phrase = phrase.toLowerCase();
   phrasePara.textContent = phrase;
   return phrase
 }
 
+function insertHTML(nd,wr) {
+  var entry = document.createElement('li');
+  entry.appendChild(document.createTextNode(wr));
+  nd.appendChild(entry);
+}
+
+// End Helper Function
+
 function testSpeech() {
   testBtn.disabled = true;
   testBtn.textContent = 'Идет тест';
 
-  //var phrase = phrases[randomPhrase()];
-  // To ensure case consistency while checking with the returned output text
-  //phrase = phrase.toLowerCase();
-  //phrasePara.textContent = phrase;
   phrase = phrasePara.textContent;
   resultPara.textContent = 'Правильно или нет?';
   resultPara.style.background = 'rgba(0,0,0,0.2)';
@@ -98,25 +112,21 @@ function testSpeech() {
   var speechRecognitionList = new SpeechGrammarList();
   speechRecognitionList.addFromString(grammar, 1);
   recognition.grammars = speechRecognitionList;
-  recognition.lang = 'ru-ru';
+  recognition.lang = 'ru-RU';
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
   recognition.start();
 
   recognition.onresult = function(event) {
-    // The SpeechRecognitionEvent results property returns a SpeechRecognitionResultList object
-    // The SpeechRecognitionResultList object contains SpeechRecognitionResult objects.
-    // It has a getter so it can be accessed like an array
-    // The first [0] returns the SpeechRecognitionResult at position 0.
-    // Each SpeechRecognitionResult object contains SpeechRecognitionAlternative objects that contain individual results.
-    // These also have getters so they can be accessed like arrays.
-    // The second [0] returns the SpeechRecognitionAlternative at position 0.
-    // We then return the transcript property of the SpeechRecognitionAlternative object 
+
     var speechResult = event.results[0][0].transcript.toLowerCase();
     diagnosticPara.textContent = 'Услышано: -> ' + speechResult + '.';
     if(speechResult === phrase) {
-      nextWord(); //?
+      stackWords = arrayRemove(stackWords, phrase);
+      nextWord(stackWords); 
+      insertHTML(correctly, phrase);
+
       resultPara.textContent = 'Я услышал правильную фразу!';
       resultPara.style.background = 'lime';
     } else {
@@ -180,7 +190,9 @@ function testSpeech() {
   }
 }
 
-nextWord();
+
+Array.prototype.push.apply(stackWords, phrases);
+nextWord(stackWords);
 testBtn.addEventListener('click', testSpeech);
 
 
@@ -204,20 +216,30 @@ function speak(){
       console.error('SpeechSynthesisUtterance.onerror');
   }
 
-  utterThis.voice = synth.getVoices()[64] // TODO как-то находить надо
+  //utterThis.voice = synth.getVoices()[64]
+  utterThis.voice = setting_voice
   //utterThis.pitch = pitch.value;
   //utterThis.rate = rate.value;
   synth.speak(utterThis);
 }
 }
 
+var setting_voice = '';
+
 inputTxt.onclick = function(event) {
   //event.preventDefault();
+  setting_voice = synth.getVoices().find(obj => {
+    return obj.name === window.selectedOption
+  })
   speak();
 }
 
 resultPara.onclick = function(event) {
-  nextWord();
+  phrase = phrasePara.textContent;
+  insertHTML(difficulties, phrase);
+  nextWord(stackWords);
 }
+
+
 
 
