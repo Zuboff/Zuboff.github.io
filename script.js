@@ -96,7 +96,27 @@ function insertHTML(nd,wr) {
   nd.appendChild(entry);
 }
 
+function setNumberWordInStorage(key) {
+  if (localStorage.getItem(key)) {
+    var coun = Number(localStorage.getItem(key)) + 1
+    localStorage.setItem(key, String(coun))
+  } else {
+    localStorage.setItem(key, '1')
+    coun = 1
+  }
+  return coun
+}
+
+function displayWordsFromStorage (key, stem, column) {
+  for (i=1; i <= Number(localStorage.getItem(key)); i++) {
+    insertHTML(column, localStorage.getItem(String(i) + stem));
+  }
+}
+
+
 // End Helper Function
+
+let r_count = 0
 
 function testSpeech() {
   testBtn.disabled = true;
@@ -125,7 +145,10 @@ function testSpeech() {
     if(speechResult === phrase) {
       stackWords = arrayRemove(stackWords, phrase);
       nextWord(stackWords); 
+
       insertHTML(correctly, phrase);
+      w_count = setNumberWordInStorage('rightKey')
+      localStorage.setItem(String(w_count) + '_right', phrase )
 
       resultPara.textContent = 'Я услышал правильную фразу!';
       resultPara.style.background = 'lime';
@@ -191,10 +214,15 @@ function testSpeech() {
 }
 
 
-Array.prototype.push.apply(stackWords, phrases);
+Array.prototype.push.apply(stackWords, phrases)
+// Убрать из буфера правильно проговореные слова сохр в localStorage
+for (i=1; i <= Number(localStorage.getItem('rightKey')); i++) {
+  var wrd = localStorage.getItem(String(i) + '_right')
+  stackWords = arrayRemove(stackWords, wrd)
+}
+
 nextWord(stackWords);
 testBtn.addEventListener('click', testSpeech);
-
 
 
 // Проговорить текст 
@@ -229,17 +257,23 @@ var setting_voice = '';
 inputTxt.onclick = function(event) {
   //event.preventDefault();
   setting_voice = synth.getVoices().find(obj => {
-    return obj.name === window.selectedOption
+    return obj.name === localStorage.getItem("voice")
   })
   speak();
 }
 
+displayWordsFromStorage('rightKey', '_right', correctly)
+displayWordsFromStorage('wrongKey', '_wrong', difficulties)
+
+
+let w_count = 0
 resultPara.onclick = function(event) {
+  w_count = setNumberWordInStorage('wrongKey')
   phrase = phrasePara.textContent;
   insertHTML(difficulties, phrase);
+  localStorage.setItem(String(w_count) + '_wrong', phrase )
   nextWord(stackWords);
 }
-
 
 
 

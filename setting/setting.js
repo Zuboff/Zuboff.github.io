@@ -35,5 +35,13 @@ function populateVoiceList() {
   var selectedOption = ''
 
   voiceSelect.onchange = function () {
-    window.selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+    selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+    localStorage.setItem('voice', selectedOption)
+  }
+
+  
+  var clearButton = document.getElementById('clear_button');
+
+  clearButton.onclick = function () {
+    localStorage.clear()
   }
