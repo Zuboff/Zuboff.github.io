@@ -14,7 +14,7 @@
   </head>
 
   <body>
-  
+
   <div id="container">
     <div class="difficulties">
       <br><br>
@@ -38,6 +38,29 @@
       
     <script src="script.js" type="module"></script>
     <script src="record_audio.js"></script>
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script> 
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+          https://firebase.google.com/docs/web/setup#config-web-app -->
+
+      <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyBUhLw5w47Xv0klwTqNufAVT5hzy8dh7yE",
+          authDomain: "logoped-zubr.firebaseapp.com",
+          databaseURL: "https://logoped-zubr.firebaseio.com",
+          projectId: "logoped-zubr",
+          storageBucket: "",
+          messagingSenderId: "1039203910810",
+          appId: "1:1039203910810:web:7d0099aacbe3ce78"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      </script>
    
   </body>
 </html>
