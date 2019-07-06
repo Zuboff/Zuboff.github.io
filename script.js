@@ -1,7 +1,9 @@
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
 import {phrases} from './vocabulary.js'
+
 
 var phrasePara = document.querySelector('.phrase');
 var resultPara = document.querySelector('.result');
@@ -49,7 +51,7 @@ function setNumberWordInStorage(key) {
 }
 
 function displayWordsFromStorage (key, stem, column) {
-  for (i=1; i <= Number(localStorage.getItem(key)); i++) {
+  for (let i=1; i <= Number(localStorage.getItem(key)); i++) {
     insertHTML(column, localStorage.getItem(String(i) + stem));
   }
 }
@@ -63,7 +65,7 @@ function testSpeech() {
   testBtn.disabled = true;
   testBtn.textContent = 'Идет тест';
 
-  phrase = phrasePara.textContent;
+  let phrase = phrasePara.textContent;
   resultPara.textContent = 'Правильно или нет?';
   resultPara.style.background = 'rgba(0,0,0,0.2)';
   diagnosticPara.textContent = 'Здесь будет то, как Я услышал';
@@ -77,10 +79,11 @@ function testSpeech() {
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
+  console.log("1")
   recognition.start();
+  console.log("12")
 
   recognition.onresult = function(event) {
-
     var speechResult = event.results[0][0].transcript.toLowerCase();
     diagnosticPara.textContent = 'Услышано: -> ' + speechResult + '.';
     if(speechResult === phrase) {
@@ -157,7 +160,7 @@ function testSpeech() {
 
 Array.prototype.push.apply(stackWords, phrases)
 // Убрать из буфера правильно проговореные слова сохр в localStorage
-for (i=1; i <= Number(localStorage.getItem('rightKey')); i++) {
+for (let i=1; i <= Number(localStorage.getItem('rightKey')); i++) {
   var wrd = localStorage.getItem(String(i) + '_right')
   stackWords = arrayRemove(stackWords, wrd)
 }
@@ -210,7 +213,7 @@ displayWordsFromStorage('wrongKey', '_wrong', difficulties)
 let w_count = 0
 resultPara.onclick = function(event) {
   w_count = setNumberWordInStorage('wrongKey')
-  phrase = phrasePara.textContent;
+  let phrase = phrasePara.textContent;
   insertHTML(difficulties, phrase);
   localStorage.setItem(String(w_count) + '_wrong', phrase )
   nextWord(stackWords);
