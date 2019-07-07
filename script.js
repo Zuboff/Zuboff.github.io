@@ -14,19 +14,6 @@ var correctly = document.getElementById('correctly'); // отобразить п
 var difficulties = document.getElementById('difficulties'); // отобразить затруднения
 
 
-// Initialize Cloud Firestore through Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp({
-    apiKey:  "AIzaSyBUhLw5w47Xv0klwTqNufAVT5hzy8dh7yE",
-    authDomain: "logoped-zubr.firebaseapp.com",
-    projectId: "logoped-zubr"
-  });
-}
-
-
-
-var db = firebase.firestore();
-
 
 //  Helper Function
 function randomPhrase(ar) {
@@ -235,21 +222,3 @@ resultPara.onclick = function(event) {
 }
 
 
-db.collection("users").add({
-  first: "Ada",
-  last: "Lovelace",
-  born: 1815
-})
-.then(function(docRef) {
-  console.log("Document written with ID: ", docRef.id);
-})
-.catch(function(error) {
-  console.error("Error adding document: ", error);
-});
-
-
-db.collection("users").get().then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
-  });
-});
